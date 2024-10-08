@@ -1,1 +1,1 @@
-rootProject.name = "mmorpg"
+rootProject.name = "microservice"

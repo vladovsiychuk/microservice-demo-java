@@ -1,4 +1,4 @@
-package com.mmorpg.commons;
+package com.microservice.commons;
 
 import java.util.UUID;
 

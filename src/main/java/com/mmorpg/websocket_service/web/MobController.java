@@ -1,6 +1,6 @@
-package com.mmorpg.websocket_service.web;
+package com.microservice.websocket_service.web;
 
-import com.mmorpg.commons.MobDTO;
+import com.microservice.commons.MobDTO;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;

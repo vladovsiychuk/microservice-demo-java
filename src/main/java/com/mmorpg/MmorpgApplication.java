@@ -1,13 +1,13 @@
-package com.mmorpg;
+package com.microservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MmorpgApplication {
+public class MicroserviceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MmorpgApplication.class, args);
+		SpringApplication.run(MicroserviceApplication.class, args);
 	}
 
 }

@@ -1,10 +1,10 @@
-package com.mmorpg;
+package com.microservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MmorpgApplicationTests {
+class MicroserviceApplicationTests {
 
 	@Test
 	void contextLoads() {
