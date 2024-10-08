@@ -1,4 +1,4 @@
-package com.microservice.commons;
+package com.microservice.shared;
 
 import java.util.UUID;
 

@@ -1,6 +1,6 @@
 package com.microservice.websocket_service.web;
 
-import com.microservice.commons.MobDTO;
+import com.microservice.shared.MobDTO;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
