@@ -1,6 +1,5 @@
-package com.microservice.websocket_service.web;
+package com.microservice.post;
 
-import com.microservice.shared.MobDTO;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/mobs")
-public class MobController {
+@RequestMapping("/v1/posts")
+public class PostController {
 
     @GetMapping
-    public List<MobDTO> listMobs() {
-        return List.of(new MobDTO(UUID.randomUUID(), 100));
+    public List<PostDTO> listPosts() {
+        return List.of(new PostDTO(UUID.randomUUID(), "foo"));
     }
  }
