@@ -2,7 +2,7 @@ package com.microservice.post;
 
 import java.util.UUID;
 
-public record PostDTO(
+public record Post(
     UUID id,
     String content
 ) { }

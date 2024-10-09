@@ -8,7 +8,7 @@ import reactor.core.publisher.Flux;
 @Service
 public class PostService {
 
-    Flux<PostDTO> create() {
-        return Flux.fromIterable(List.of(new PostDTO(UUID.randomUUID(), "foo")));
+    Flux<Post> create() {
+        return Flux.fromIterable(List.of(new Post(UUID.randomUUID(), "foo")));
     }
 }
