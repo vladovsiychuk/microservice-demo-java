@@ -1,3 +1,7 @@
 spring:
   application:
     name: microservice-demo-java
+  r2dbc:
+    url: "r2dbc:postgresql://localhost/postgres"
+    username: "root"
+    password: "rootpassword"

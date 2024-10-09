@@ -19,6 +19,10 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+	runtimeOnly("org.postgresql:postgresql")
+	runtimeOnly("org.postgresql:r2dbc-postgresql")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("io.projectreactor:reactor-test")
