@@ -6,14 +6,5 @@ databaseChangeLog:
         - createTable:
             tableName: post
             columns:
-              - column:
-                  name: id
-                  type: varchar(250)
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: content
-                  type: varchar(250)
-                  constraints:
-                    nullable: true
+              - column: { name: id, type: varchar(250), constraints: { primaryKey: true, nullable: false } }
+              - column: { name: content, type: varchar(250), constraints: { nullable: true } }
