@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1728587568-1
+      author: Vlad
+      changes:
+        - createTable:
+            tableName: post
+            columns:
+              - column:
+                  name: id
+                  type: varchar(250)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: content
+                  type: varchar(250)
+                  constraints:
+                    nullable: true

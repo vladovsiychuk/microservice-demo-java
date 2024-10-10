@@ -7,6 +7,6 @@ spring:
     password: "rootpassword"
   liquibase:
     url: "jdbc:postgresql://localhost/postgres"
-    password: "rootpassword"
     user: "root"
-    change-log: "classpath:/db/changelog/db.changelog-master.xml"
+    password: "rootpassword"
+    change-log: "classpath:/db/changelog.yaml"
