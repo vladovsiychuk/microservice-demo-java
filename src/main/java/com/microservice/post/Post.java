@@ -1,10 +1,13 @@
 package com.microservice.post;
 
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-public record Post(
+@Getter @Setter
+public class Post {
     @Id
-    UUID id,
-    String content
-) { }
+    private UUID id;
+    private String content;
+}
