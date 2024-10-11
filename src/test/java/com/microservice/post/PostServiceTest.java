@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
@@ -39,45 +41,56 @@ class PostServiceTest {
         postMockedStatic.close();
     }
 
-    @Test
-    void testCreate_ShouldCallSave() {
-        Post newPost = mock(Post.class);
-        PostCommand postCommand = mock(PostCommand.class);
+    @Nested
+    @DisplayName("Successful post creation")
+    class SuccessfulCreationTests {
 
-        postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
-        when(postRepository.save(any(Post.class))).thenReturn(Mono.just(newPost));
+        @Test
+        @DisplayName("Should call save when post is created successfully")
+        void testCreate_ShouldCallSave() {
+            Post newPost = mock(Post.class);
+            PostCommand postCommand = mock(PostCommand.class);
 
-        Post result = postService.create(postCommand).block();
+            postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
+            when(postRepository.save(any(Post.class))).thenReturn(Mono.just(newPost));
 
-        assertNotNull(result);
+            Post result = postService.create(postCommand).block();
 
-        verify(postRepository, times(1)).save(any(Post.class));
+            assertNotNull(result);
+
+            verify(postRepository, times(1)).save(any(Post.class));
+        }
     }
 
-    @Test
-    void testCreate_ShouldThrowAnErrorWhenRepositoryFailsTheSave() {
-        Post newPost = mock(Post.class);
-        PostCommand postCommand = mock(PostCommand.class); // Mock PostCommand if needed
+    @Nested
+    @DisplayName("Failed post creation")
+    class FailedCreationTests {
 
-        postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
-        when(postRepository.save(any(Post.class))).thenReturn(Mono.error(new RuntimeException("Error")));
+        @Test
+        @DisplayName("Should throw an error when repository fails to save")
+        void testCreate_ShouldThrowAnErrorWhenRepositoryFailsTheSave() {
+            Post newPost = mock(Post.class);
+            PostCommand postCommand = mock(PostCommand.class);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
+            postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
+            when(postRepository.save(any(Post.class))).thenReturn(Mono.error(new RuntimeException("Error")));
 
-        assertEquals("Error", exception.getMessage());
-    }
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
 
-    @Test
-    void testCreate_ShouldThrowAnErrorWhenPostModelFails() {
-        Post newPost = mock(Post.class);
-        PostCommand postCommand = mock(PostCommand.class);
+            assertEquals("Error", exception.getMessage());
+        }
 
-        postMockedStatic.when(() -> Post.create(postCommand)).thenThrow(new RuntimeException("Error"));
-        when(postRepository.save(any(Post.class))).thenReturn(Mono.just(newPost));
+        @Test
+        @DisplayName("Should throw an error when Post.create() fails")
+        void testCreate_ShouldThrowAnErrorWhenPostModelFails() {
+            PostCommand postCommand = mock(PostCommand.class);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
+            postMockedStatic.when(() -> Post.create(postCommand)).thenThrow(new RuntimeException("Error"));
 
-        assertEquals("Error", exception.getMessage());
-        verify(postRepository, never()).save(any(Post.class));
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
+
+            assertEquals("Error", exception.getMessage());
+            verify(postRepository, never()).save(any(Post.class));
+        }
     }
 }
