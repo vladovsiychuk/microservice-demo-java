@@ -18,14 +18,12 @@ public class Post implements Persistable<UUID> {
     @Transient @JsonIgnore
     private boolean isNew;
 
-    public Post(PostCommand command) {
-        id = UUID.randomUUID();
-        content = command.content();
-        isNew = true;
-    }
-
     @Override
     public boolean isNew() {
         return isNew;
+    }
+
+    public static Post create(PostCommand command) {
+        return new Post(UUID.randomUUID(), command.content(), true);
     }
 }

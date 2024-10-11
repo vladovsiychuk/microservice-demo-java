@@ -16,7 +16,7 @@ public class PostService {
     }
 
     public Mono<Post> create(PostCommand command) {
-        var newPost = new Post(command);
+        var newPost = Post.create(command);
         return repository.save(newPost)
             .thenReturn(newPost);
     }
