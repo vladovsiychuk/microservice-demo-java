@@ -24,6 +24,9 @@ public class Post implements Persistable<UUID> {
     }
 
     public static Post create(PostCommand command) {
+        if (command.content().length() > 100)
+            throw new RuntimeException("Content too long.");
+
         return new Post(UUID.randomUUID(), command.content(), true);
     }
 }

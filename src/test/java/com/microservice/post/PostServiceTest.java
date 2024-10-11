@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,9 +28,11 @@ class PostServiceTest {
 
     @Test
     void testCreate_ShouldCallSave() {
+        var postMockedStatic = mockStatic(Post.class);
         Post newPost = mock(Post.class);
         PostCommand postCommand = mock(PostCommand.class); // Mock PostCommand if needed
 
+        postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
         when(postRepository.save(any(Post.class))).thenReturn(Mono.just(newPost));
 
         Post result = postService.create(postCommand).block();
