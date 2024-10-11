@@ -9,18 +9,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-@WebFluxTest(PostController.class) // Make sure you're using the right annotation for WebFlux
+@WebFluxTest(PostController.class)
 class PostControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @MockBean
-    private PostService postService; // Mock the PostService
+    private PostService postService;
 
     @Test
     void abc() {
-        Post post = Post.create(new PostCommand("hello")); // Create a mock Post object
+        Post post = Post.create(new PostCommand("hello"));
 
 
         given(this.postService.create(new PostCommand("hello"))).willReturn(Mono.just(post));
@@ -29,8 +29,8 @@ class PostControllerTest {
         webTestClient.post()
             .uri("/v1/posts")
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(new PostCommand("hello")) // Send a JSON body with PostCommand
+            .bodyValue(new PostCommand("hello"))
             .exchange()
-            .expectStatus().isOk(); // Expect a 200 OK status
+            .expectStatus().isOk();
     }
 }
