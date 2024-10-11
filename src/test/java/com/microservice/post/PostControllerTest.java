@@ -1,6 +1,7 @@
 package com.microservice.post;
 
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -21,16 +22,28 @@ class PostControllerTest {
     @Test
     void abc() {
         Post post = Post.create(new PostCommand("hello"));
+        var command =
+            """
+            {
+                "content": "hello"
+            }
+            """;
 
+        var expectedBody =
+            """
+            {
+                "content": "hello"
+            }
+            """;
 
-        given(this.postService.create(new PostCommand("hello"))).willReturn(Mono.just(post));
+        given(this.postService.create(any(PostCommand.class))).willReturn(Mono.just(post));
 
-        // Perform a POST request and assert the response status
         webTestClient.post()
             .uri("/v1/posts")
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(new PostCommand("hello"))
+            .bodyValue(command)
             .exchange()
-            .expectStatus().isOk();
+            .expectStatus().isOk()
+            .expectBody().json(expectedBody);
     }
 }

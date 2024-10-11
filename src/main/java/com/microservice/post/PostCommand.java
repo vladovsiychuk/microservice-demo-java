@@ -1,5 +1,7 @@
 package com.microservice.post;
 
+import lombok.NonNull;
+
 public record PostCommand(
-    String content
+    @NonNull String content
 ) { }
