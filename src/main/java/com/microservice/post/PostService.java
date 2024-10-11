@@ -10,7 +10,7 @@ public class PostService {
     @Autowired
     PostRepository repository;
 
-    Flux<Post> create() {
+    Flux<Post> list() {
         return repository.findAll();
     }
 }

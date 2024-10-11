@@ -14,7 +14,7 @@ public class PostController {
     PostService service;
 
     @GetMapping
-    public Flux<Post> listPosts() {
-        return service.create();
+    public Flux<Post> list() {
+        return service.list();
     }
 }
