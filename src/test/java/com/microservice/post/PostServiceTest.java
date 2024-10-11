@@ -62,9 +62,7 @@ class PostServiceTest {
         postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
         when(postRepository.save(any(Post.class))).thenReturn(Mono.error(new RuntimeException("Error")));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            postService.create(postCommand).block();
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
 
         assertEquals("Error", exception.getMessage());
     }
@@ -77,9 +75,7 @@ class PostServiceTest {
         postMockedStatic.when(() -> Post.create(postCommand)).thenThrow(new RuntimeException("Error"));
         when(postRepository.save(any(Post.class))).thenReturn(Mono.just(newPost));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            postService.create(postCommand).block();
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
 
         assertEquals("Error", exception.getMessage());
         verify(postRepository, never()).save(any(Post.class));
