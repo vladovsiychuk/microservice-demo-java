@@ -46,4 +46,20 @@ class PostControllerTest {
             .expectStatus().isOk()
             .expectBody().json(expectedBody);
     }
+
+    @Test
+    void shouldReturnErrorStatusCode() {
+        given(this.postService.create(any(PostCommand.class))).willReturn(Mono.error(new RuntimeException("Error")));
+
+        webTestClient.post()
+            .uri("/v1/posts")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(anyPostCommand())
+            .exchange()
+            .expectStatus().is5xxServerError();
+    }
+
+    private PostCommand anyPostCommand() {
+        return new PostCommand("foo");
+    }
 }
