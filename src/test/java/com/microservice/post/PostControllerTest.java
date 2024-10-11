@@ -20,7 +20,7 @@ class PostControllerTest {
     private PostService postService;
 
     @Test
-    void abc() {
+    void shouldCreatePostAndReturnJsonResponse() {
         Post post = Post.create(new PostCommand("hello"));
         var command =
             """
