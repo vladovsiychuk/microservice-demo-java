@@ -14,7 +14,10 @@ import org.springframework.data.domain.Persistable;
 public class Post implements Persistable<UUID> {
     @Id private UUID id;
     private String content;
-    @Transient @JsonIgnore
+    private boolean isPrivate;
+
+    @Transient
+    @JsonIgnore
     private boolean isNew;
 
     @Override
@@ -26,6 +29,6 @@ public class Post implements Persistable<UUID> {
         if (command.content().length() > 100)
             throw new RuntimeException("Content too long.");
 
-        return new Post(UUID.randomUUID(), command.content(), true);
+        return new Post(UUID.randomUUID(), command.content(), command.isPrivate(), true);
     }
 }

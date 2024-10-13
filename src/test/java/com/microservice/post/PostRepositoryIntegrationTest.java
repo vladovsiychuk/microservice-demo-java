@@ -1,6 +1,5 @@
 package com.microservice.post;
 
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,11 +23,11 @@ class PostRepositoryIntegrationTest {
 
     @Test
     void testEntitySaveAndMapping() {
-        var postId = UUID.randomUUID();
-        Post post = new Post(postId, "test", true);
+        var post = Post.create(new PostCommand("test", false));
+        assert post.getId() != null;
 
         repository.save(post).block();
-        Post savedEntity = repository.findById(postId).block();
+        Post savedEntity = repository.findById(post.getId()).block();
 
         assert savedEntity != null;
     }

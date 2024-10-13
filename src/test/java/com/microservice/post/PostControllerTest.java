@@ -22,7 +22,7 @@ class PostControllerTest {
 
     @Test
     void shouldCreatePostAndReturnJsonResponse() {
-        Post post = Post.create(new PostCommand("hello"));
+        Post post = Post.create(new PostCommand("hello", false));
         var command =
             """
             {
@@ -61,6 +61,6 @@ class PostControllerTest {
     }
 
     private PostCommand anyPostCommand() {
-        return new PostCommand("foo");
+        return new PostCommand("foo", false);
     }
 }

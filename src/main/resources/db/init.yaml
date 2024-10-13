@@ -8,3 +8,4 @@ databaseChangeLog:
             columns:
               - column: { name: id, type: uuid, constraints: { primaryKey: true, nullable: false } }
               - column: { name: content, type: varchar(250), constraints: { nullable: true } }
+              - column: { name: is_private, type: boolean, constraints: { nullable: false } }
