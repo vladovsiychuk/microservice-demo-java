@@ -24,9 +24,11 @@ class PostRepositoryIntegrationTest {
 
     @Test
     void testEntitySaveAndMapping() {
-        Post post = new Post(UUID.randomUUID(), "test", true);
+        var postId = UUID.randomUUID();
+        Post post = new Post(postId, "test", true);
 
-        Post savedEntity = repository.save(post).block();
+        repository.save(post).block();
+        Post savedEntity = repository.findById(postId).block();
 
         assert savedEntity != null;
     }

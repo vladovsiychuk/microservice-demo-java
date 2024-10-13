@@ -6,5 +6,5 @@ databaseChangeLog:
         - createTable:
             tableName: post
             columns:
-              - column: { name: id, type: varchar(250), constraints: { primaryKey: true, nullable: false } }
+              - column: { name: id, type: uuid, constraints: { primaryKey: true, nullable: false } }
               - column: { name: content, type: varchar(250), constraints: { nullable: true } }
