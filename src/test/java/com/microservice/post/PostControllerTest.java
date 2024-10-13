@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+@SuppressWarnings("unused")
 @WebFluxTest(PostController.class)
 class PostControllerTest {
 
