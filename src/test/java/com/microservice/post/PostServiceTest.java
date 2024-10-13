@@ -1,8 +1,6 @@
 package com.microservice.post;
 
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +54,7 @@ class PostServiceTest {
 
             Post result = postService.create(postCommand).block();
 
-            assertNotNull(result);
+            assert result != null;
 
             verify(postRepository, times(1)).save(any(Post.class));
         }
@@ -77,7 +75,7 @@ class PostServiceTest {
 
             RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
 
-            assertEquals("Error", exception.getMessage());
+            assert exception.getMessage().equals("Error");
         }
 
         @Test
@@ -89,7 +87,7 @@ class PostServiceTest {
 
             RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
 
-            assertEquals("Error", exception.getMessage());
+            assert exception.getMessage().equals("Error");
             verify(postRepository, never()).save(any(Post.class));
         }
     }
