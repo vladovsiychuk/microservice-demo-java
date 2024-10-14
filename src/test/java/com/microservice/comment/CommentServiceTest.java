@@ -1,7 +1,9 @@
 package com.microservice.comment;
 
 import com.microservice.post.PostService;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -49,7 +51,7 @@ class CommentServiceTest {
         @DisplayName("Should call save when comment is created successfully")
         void testCreate_ShouldCallSave() {
             Comment newComment = mock(Comment.class);
-            CommentCommand commentCommand = mock(CommentCommand.class);
+            CommentCommand commentCommand = anyCommentCommand();
 
             commentMockedStatic.when(() -> Comment.create(commentCommand, false)).thenReturn(newComment);
             when(postService.isPrivate(any())).thenReturn(Mono.just(false));
@@ -68,31 +70,23 @@ class CommentServiceTest {
     @DisplayName("Failed comment creation")
     class FailedCreationTests {
 
-//        @Test
-//        @DisplayName("Should throw an error when repository fails to save")
-//        void testCreate_ShouldThrowAnErrorWhenRepositoryFailsTheSave() {
-//            Comment newComment = mock(Comment.class);
-//            CommentCommand commentCommand = mock(CommentCommand.class);
-//
-//            commentMockedStatic.when(() -> Comment.create(commentCommand)).thenReturn(newComment);
-//            when(commentRepository.save(any(Comment.class))).thenReturn(Mono.error(new RuntimeException("Error")));
-//
-//            RuntimeException exception = assertThrows(RuntimeException.class, () -> commentService.create(commentCommand).block());
-//
-//            assert exception.getMessage().equals("Error");
-//        }
+        @Test
+        @DisplayName("Should throw an error when repository fails to save")
+        void testCreate_ShouldThrowAnErrorWhenRepositoryFailsTheSave() {
+            Comment newComment = mock(Comment.class);
+            CommentCommand commentCommand = anyCommentCommand();
 
-//        @Test
-//        @DisplayName("Should throw an error when Comment.create() fails")
-//        void testCreate_ShouldThrowAnErrorWhenCommentModelFails() {
-//            CommentCommand commentCommand = mock(CommentCommand.class);
-//
-//            commentMockedStatic.when(() -> Comment.create(commentCommand)).thenThrow(new RuntimeException("Error"));
-//
-//            RuntimeException exception = assertThrows(RuntimeException.class, () -> commentService.create(commentCommand).block());
-//
-//            assert exception.getMessage().equals("Error");
-//            verify(commentRepository, never()).save(any(Comment.class));
-//        }
+            commentMockedStatic.when(() -> Comment.create(commentCommand, false)).thenReturn(newComment);
+            when(postService.isPrivate(any())).thenReturn(Mono.error(new RuntimeException("Error")));
+            when(commentRepository.save(any(Comment.class))).thenReturn(Mono.just(newComment));
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> commentService.create(commentCommand).block());
+
+            assert exception.getMessage().equals("Error");
+        }
+    }
+
+    private static CommentCommand anyCommentCommand() {
+        return new CommentCommand("hello", UUID.randomUUID());
     }
 }

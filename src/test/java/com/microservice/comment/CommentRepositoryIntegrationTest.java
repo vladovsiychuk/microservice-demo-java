@@ -1,8 +1,6 @@
 package com.microservice.comment;
 
-import com.microservice.post.Post;
-import com.microservice.post.PostCommand;
-import com.microservice.post.PostRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,15 +20,15 @@ class CommentRepositoryIntegrationTest {
     );
 
     @Autowired
-    PostRepository repository;
+    CommentRepository repository;
 
     @Test
     void testEntitySaveAndMapping() {
-        var post = Post.create(new PostCommand("test", false));
-        assert post.getId() != null;
+        var comment = Comment.create(new CommentCommand("test", UUID.randomUUID()), false);
+        assert comment.getId() != null;
 
-        repository.save(post).block();
-        Post savedEntity = repository.findById(post.getId()).block();
+        repository.save(comment).block();
+        Comment savedEntity = repository.findById(comment.getId()).block();
 
         assert savedEntity != null;
     }
