@@ -47,7 +47,7 @@ class PostServiceTest {
         @DisplayName("Should call save when post is created successfully")
         void testCreate_ShouldCallSave() {
             Post newPost = mock(Post.class);
-            PostCommand postCommand = mock(PostCommand.class);
+            PostCommand postCommand = anyPostCommand();
 
             postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
             when(postRepository.save(any(Post.class))).thenReturn(Mono.just(newPost));
@@ -68,7 +68,7 @@ class PostServiceTest {
         @DisplayName("Should throw an error when repository fails to save")
         void testCreate_ShouldThrowAnErrorWhenRepositoryFailsTheSave() {
             Post newPost = mock(Post.class);
-            PostCommand postCommand = mock(PostCommand.class);
+            PostCommand postCommand = anyPostCommand();
 
             postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
             when(postRepository.save(any(Post.class))).thenReturn(Mono.error(new RuntimeException("Error")));
@@ -81,7 +81,7 @@ class PostServiceTest {
         @Test
         @DisplayName("Should throw an error when Post.create() fails")
         void testCreate_ShouldThrowAnErrorWhenPostModelFails() {
-            PostCommand postCommand = mock(PostCommand.class);
+            PostCommand postCommand = anyPostCommand();
 
             postMockedStatic.when(() -> Post.create(postCommand)).thenThrow(new RuntimeException("Error"));
 
@@ -90,5 +90,9 @@ class PostServiceTest {
             assert exception.getMessage().equals("Error");
             verify(postRepository, never()).save(any(Post.class));
         }
+    }
+
+    private static PostCommand anyPostCommand() {
+        return new PostCommand("hello", false);
     }
 }
