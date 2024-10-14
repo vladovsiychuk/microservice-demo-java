@@ -1,5 +1,6 @@
 package com.microservice.post;
 
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -19,5 +20,10 @@ public class PostService {
         var newPost = Post.create(command);
         return repository.save(newPost)
             .thenReturn(newPost);
+    }
+
+    public Mono<Boolean> isPrivate(UUID postId) {
+        return repository.findById(postId)
+            .map(Post::isPrivate);
     }
 }

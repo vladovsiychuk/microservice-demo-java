@@ -1,8 +1,9 @@
-package com.microservice.post;
+package com.microservice.comment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -14,55 +15,40 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 @SuppressWarnings("unused")
-@WebFluxTest(PostController.class)
-class PostControllerTest {
+@WebFluxTest(CommentController.class)
+class CommentControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @MockBean
-    private PostService postService;
+    private CommentService commentService;
 
     ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    void shouldCreatePostAndReturnJsonResponse() throws JsonProcessingException {
-        Post post = Post.create(new PostCommand("hello", false));
+    void shouldCreateCommentAndReturnJsonResponse() throws JsonProcessingException {
+        Comment comment = Comment.create(new CommentCommand("hello", UUID.randomUUID()), false);
         var command = Map.of(
-            "content", "hello"
-        );
-
-        assert post.getId() != null;
-        var expectedBody = Map.of(
-            "id", post.getId().toString(),
             "content", "hello",
-            "private", false
+            "postId", comment.getPostId()
         );
 
-        given(this.postService.create(any(PostCommand.class))).willReturn(Mono.just(post));
+        assert comment.getId() != null;
+        var expectedBody = Map.of(
+            "id", comment.getId().toString(),
+            "content", "hello",
+            "postId", comment.getPostId()
+        );
+
+        given(this.commentService.create(any(CommentCommand.class))).willReturn(Mono.just(comment));
 
         webTestClient.post()
-            .uri("/v1/posts")
+            .uri("/v1/posts/{postId}/comment", comment.getPostId())
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(command)
             .exchange()
             .expectStatus().isOk()
             .expectBody().json(mapper.writeValueAsString(expectedBody), true);
-    }
-
-    @Test
-    void shouldReturnErrorStatusCode() {
-        given(this.postService.create(any(PostCommand.class))).willReturn(Mono.error(new RuntimeException("Error")));
-
-        webTestClient.post()
-            .uri("/v1/posts")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(anyPostCommand())
-            .exchange()
-            .expectStatus().is5xxServerError();
-    }
-
-    private PostCommand anyPostCommand() {
-        return new PostCommand("foo", false);
     }
 }
