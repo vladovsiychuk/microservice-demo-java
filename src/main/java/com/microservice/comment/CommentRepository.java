@@ -1,7 +1,7 @@
 package com.microservice.comment;
 
 import java.util.UUID;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
-public interface CommentRepository extends ReactiveCrudRepository<Comment, UUID> {
+public interface CommentRepository extends ReactiveMongoRepository<Comment, UUID> {
 }
