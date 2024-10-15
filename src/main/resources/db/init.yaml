@@ -9,9 +9,3 @@ databaseChangeLog:
               - column: { name: id, type: uuid, constraints: { primaryKey: true, nullable: false } }
               - column: { name: content, type: varchar(250), constraints: { nullable: true } }
               - column: { name: is_private, type: boolean, constraints: { nullable: false } }
-        - createTable:
-            tableName: comment
-            columns:
-              - column: { name: id, type: uuid, constraints: { primaryKey: true, nullable: false } }
-              - column: { name: post_id, type: uuid, constraints: { nullable: false } }
-              - column: { name: content, type: varchar(250), constraints: { nullable: true } }
