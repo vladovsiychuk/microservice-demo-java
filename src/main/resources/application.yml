@@ -5,12 +5,9 @@ spring:
     url: "r2dbc:postgresql://localhost/postgres"
     username: "root"
     password: "rootpassword"
-  mongodb:
-    host: "localhost"
-    port: 27017
-    database: "test"
-    username: "root"
-    password: "example"
+  data:
+    mongodb:
+      uri: "mongodb://root:example@localhost:27017/test?authSource=admin"
   liquibase:
     url: "jdbc:postgresql://localhost/postgres"
     user: "root"
