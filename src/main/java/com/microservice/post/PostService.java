@@ -17,7 +17,7 @@ public class PostService {
     PostRepository repository;
 
     @Autowired
-    private ApplicationEventPublisher events;
+    private ApplicationEventPublisher publisher;
 
     Flux<Post> list() {
         return repository.findAll();
@@ -28,7 +28,7 @@ public class PostService {
         return repository.save(newPost)
             .map(post -> post)
             .doOnSuccess(post ->
-                events.publishEvent(new PostCreatedEvent(new Date().toInstant().toEpochMilli(), post.toDto()))
+                publisher.publishEvent(new PostCreatedEvent(new Date().toInstant().toEpochMilli(), post.toDto()))
             );
     }
 

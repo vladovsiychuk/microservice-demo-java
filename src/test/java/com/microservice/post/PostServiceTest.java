@@ -17,6 +17,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.ApplicationEventPublisher;
 import reactor.core.publisher.Mono;
 
 class PostServiceTest {
@@ -25,6 +26,9 @@ class PostServiceTest {
 
     @Mock
     private PostRepository postRepository;
+
+    @Mock
+    private ApplicationEventPublisher publisher;
 
     private MockedStatic<Post> postMockedStatic;
 
@@ -43,7 +47,7 @@ class PostServiceTest {
     class createTests {
 
         @Test
-        void shouldCallSave() {
+        void shouldSucceed() {
             Post newPost = mock(Post.class);
             PostCommand postCommand = anyPostCommand();
 
