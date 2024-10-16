@@ -1,5 +1,6 @@
 package com.microservice.post;
 
+import com.microservice.shared.PostCreatedEvent;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -59,6 +60,7 @@ class PostServiceTest {
             assert result != null;
 
             verify(postRepository, times(1)).save(any());
+            verify(publisher, times(1)).publishEvent(any(PostCreatedEvent.class));
         }
 
         @Test
