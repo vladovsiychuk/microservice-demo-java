@@ -3,7 +3,6 @@ package com.microservice.post;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,12 +39,10 @@ class PostServiceTest {
     }
 
     @Nested
-    @DisplayName("Successful post creation")
-    class SuccessfulCreationTests {
+    class createTests {
 
         @Test
-        @DisplayName("Should call save when post is created successfully")
-        void testCreate_ShouldCallSave() {
+        void shouldCallSave() {
             Post newPost = mock(Post.class);
             PostCommand postCommand = anyPostCommand();
 
@@ -58,15 +55,9 @@ class PostServiceTest {
 
             verify(postRepository, times(1)).save(any());
         }
-    }
-
-    @Nested
-    @DisplayName("Failed post creation")
-    class FailedCreationTests {
 
         @Test
-        @DisplayName("Should throw an error when repository fails to save")
-        void testCreate_ShouldThrowAnErrorWhenRepositoryFailsTheSave() {
+        void shouldThrowAnErrorWhenRepositoryFailsTheSave() {
             Post newPost = mock(Post.class);
             PostCommand postCommand = anyPostCommand();
 
@@ -79,8 +70,7 @@ class PostServiceTest {
         }
 
         @Test
-        @DisplayName("Should throw an error when Post.create() fails")
-        void testCreate_ShouldThrowAnErrorWhenPostModelFails() {
+        void shouldThrowAnErrorWhenPostModelFails() {
             PostCommand postCommand = anyPostCommand();
 
             postMockedStatic.when(() -> Post.create(postCommand)).thenThrow(new RuntimeException("Error"));
