@@ -50,13 +50,13 @@ class PostServiceTest {
             PostCommand postCommand = anyPostCommand();
 
             postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
-            when(postRepository.save(any(Post.class))).thenReturn(Mono.just(newPost));
+            when(postRepository.save(any())).thenReturn(Mono.just(newPost));
 
             Post result = postService.create(postCommand).block();
 
             assert result != null;
 
-            verify(postRepository, times(1)).save(any(Post.class));
+            verify(postRepository, times(1)).save(any());
         }
     }
 
@@ -71,7 +71,7 @@ class PostServiceTest {
             PostCommand postCommand = anyPostCommand();
 
             postMockedStatic.when(() -> Post.create(postCommand)).thenReturn(newPost);
-            when(postRepository.save(any(Post.class))).thenReturn(Mono.error(new RuntimeException("Error")));
+            when(postRepository.save(any())).thenReturn(Mono.error(new RuntimeException("Error")));
 
             RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.create(postCommand).block());
 

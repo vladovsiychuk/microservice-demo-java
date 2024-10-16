@@ -43,7 +43,7 @@ class PostControllerTest {
                 "private", false
             );
 
-            given(postService.create(any(PostCommand.class))).willReturn(Mono.just(post));
+            given(postService.create(any())).willReturn(Mono.just(post));
 
             webTestClient.post()
                 .uri("/v1/posts")
@@ -56,7 +56,7 @@ class PostControllerTest {
 
         @Test
         void shouldReturnErrorStatusCodeOnCreate() {
-            given(postService.create(any(PostCommand.class))).willReturn(Mono.error(new RuntimeException("Error")));
+            given(postService.create(any())).willReturn(Mono.error(new RuntimeException("Error")));
 
             webTestClient.post()
                 .uri("/v1/posts")

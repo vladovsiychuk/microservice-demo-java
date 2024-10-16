@@ -41,7 +41,7 @@ class CommentControllerTest {
             "postId", comment.getPostId()
         );
 
-        given(this.commentService.create(any(CommentCommand.class))).willReturn(Mono.just(comment));
+        given(this.commentService.create(any())).willReturn(Mono.just(comment));
 
         webTestClient.post()
             .uri("/v1/posts/{postId}/comment", comment.getPostId())
