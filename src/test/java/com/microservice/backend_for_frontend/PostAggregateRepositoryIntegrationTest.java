@@ -1,5 +1,7 @@
 package com.microservice.backend_for_frontend;
 
+import com.microservice.shared.CommentCreatedEvent;
+import com.microservice.shared.CommentDTO;
 import com.microservice.shared.PostCreatedEvent;
 import com.microservice.shared.PostDTO;
 import java.util.UUID;
@@ -35,5 +37,16 @@ class PostAggregateRepositoryIntegrationTest {
         PostAggregate savedEntity = repository.findById(postAggregate.getId()).block();
 
         assert savedEntity != null;
+
+        PostAggregate modifiedPost = savedEntity.addComment(
+            new CommentCreatedEvent(1L, new CommentDTO(UUID.randomUUID(), "hello"))
+        );
+
+        repository.save(modifiedPost).subscribe();
+        PostAggregate updatedEntity = repository.findById(postAggregate.getId()).block();
+
+        assert updatedEntity != null;
+        assert updatedEntity.getComments() != null;
+        assert updatedEntity.getComments().getFirst().getContent().equals("hello");
     }
 }
