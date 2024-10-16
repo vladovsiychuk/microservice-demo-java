@@ -3,6 +3,7 @@ package com.microservice.post;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,6 +61,48 @@ class PostControllerTest {
 
             webTestClient.post()
                 .uri("/v1/posts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(anyPostCommand())
+                .exchange()
+                .expectStatus().is5xxServerError();
+        }
+    }
+
+    @Nested
+    class updateTests {
+
+        @Test
+        void shouldUpdatePostAndReturnJsonResponse() throws JsonProcessingException {
+            Post post = Post.create(new PostCommand("hello", true));
+            var command = Map.of(
+                "content", "hello",
+                "isPrivate", true
+            );
+
+            assert post.getId() != null;
+            var expectedBody = Map.of(
+                "id", post.getId().toString(),
+                "content", "hello",
+                "private", true
+            );
+
+            given(postService.update(any(), any())).willReturn(Mono.just(post));
+
+            webTestClient.put()
+                .uri("/v1/posts/{postId}", UUID.randomUUID())
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(command)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().json(mapper.writeValueAsString(expectedBody), true);
+        }
+
+        @Test
+        void shouldReturnErrorStatusCodeOnUpdate() {
+            given(postService.update(any(), any())).willReturn(Mono.error(new RuntimeException("Error")));
+
+            webTestClient.put()
+                .uri("/v1/posts/{postId}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(anyPostCommand())
                 .exchange()

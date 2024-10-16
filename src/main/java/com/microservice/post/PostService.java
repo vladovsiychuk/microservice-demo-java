@@ -26,4 +26,8 @@ public class PostService {
         return repository.findById(postId)
             .map(Post::isPrivate);
     }
+
+    public Mono<Post> update(UUID postId, PostCommand command) {
+        return null;
+    }
 }
