@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/v1/posts")
+@RequestMapping("/v1/posts/{id}/comment")
 public class CommentController {
 
     @Autowired
     CommentService service;
 
-    @PostMapping("/{id}/comment")
+    @PostMapping
     public Mono<Comment> create(@RequestBody CommentCommand command, @PathVariable UUID id) {
         var newCommand = new CommentCommand(command.content(), id);
         return service.create(newCommand);
