@@ -22,7 +22,7 @@ class PostRepositoryIntegrationTest {
     PostRepository repository;
 
     @Test
-    void testEntitySaveAndMapping() {
+    void testEntitySaveAndUpdate() {
         var post = Post.create(new PostCommand("test", false));
         assert post.getId() != null;
 
@@ -30,5 +30,15 @@ class PostRepositoryIntegrationTest {
         Post savedEntity = repository.findById(post.getId()).block();
 
         assert savedEntity != null;
+        assert savedEntity.getContent().equals("test");
+        assert !savedEntity.isPrivate();
+
+        var updateCommand = new PostCommand("test mod", true);
+        Post updatedPost = savedEntity.update(updateCommand);
+        Post updatedEntity = repository.save(updatedPost).block();
+
+        assert updatedEntity != null;
+        assert updatedEntity.getContent().equals("test mod");
+        assert updatedEntity.isPrivate();
     }
 }

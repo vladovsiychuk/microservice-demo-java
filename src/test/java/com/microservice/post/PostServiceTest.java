@@ -1,5 +1,6 @@
 package com.microservice.post;
 
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,6 +80,72 @@ class PostServiceTest {
 
             assert exception.getMessage().equals("Error");
             verify(postRepository, never()).save(any(Post.class));
+        }
+    }
+
+    @Nested
+    class updateTests {
+
+        @Test
+        void shouldSucceed() {
+            Post mockedPost = mock(Post.class);
+            PostCommand postCommand = anyPostCommand();
+
+            when(postRepository.findById(any(UUID.class))).thenReturn(Mono.just(mockedPost));
+            when(mockedPost.update(any())).thenReturn(mockedPost);
+            when(postRepository.save(any())).thenReturn(Mono.just(mockedPost));
+
+            Post result = postService.update(UUID.randomUUID() ,postCommand).block();
+
+            assert result != null;
+
+            verify(postRepository, times(1)).findById(any(UUID.class));
+            verify(mockedPost, times(1)).update(any());
+            verify(postRepository, times(1)).save(any());
+        }
+
+        @Test
+        void shouldThrowAnErrorWhenPostNotFound() {
+            PostCommand postCommand = anyPostCommand();
+
+            when(postRepository.findById(any(UUID.class))).thenReturn(Mono.empty());
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                    postService.update(UUID.randomUUID() ,postCommand).block()
+            );
+
+            assert exception.getMessage().equals("Post Not Found");
+        }
+
+        @Test
+        void shouldThrowAnErrorWhenPostModelFails() {
+            Post mockedPost = mock(Post.class);
+            PostCommand postCommand = anyPostCommand();
+
+            when(postRepository.findById(any(UUID.class))).thenReturn(Mono.just(mockedPost));
+            when(mockedPost.update(any())).thenThrow(new RuntimeException("Something wrong in the model layer."));
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                postService.update(UUID.randomUUID() ,postCommand).block()
+            );
+
+            assert exception.getMessage().equals("Something wrong in the model layer.");
+        }
+
+        @Test
+        void shouldThrowAnErrorWhenSaveFails() {
+            Post mockedPost = mock(Post.class);
+            PostCommand postCommand = anyPostCommand();
+
+            when(postRepository.findById(any(UUID.class))).thenReturn(Mono.just(mockedPost));
+            when(mockedPost.update(any())).thenReturn(mockedPost);
+            when(postRepository.save(any())).thenReturn(Mono.error(new RuntimeException("Saving failed.")));
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                postService.update(UUID.randomUUID() ,postCommand).block()
+            );
+
+            assert exception.getMessage().equals("Saving failed.");
         }
     }
 
