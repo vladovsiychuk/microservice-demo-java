@@ -22,12 +22,17 @@ public class PostService {
             .thenReturn(newPost);
     }
 
+    public Mono<Post> update(UUID postId, PostCommand command) {
+        return repository.findById(postId)
+            .switchIfEmpty(Mono.error(new RuntimeException("Post Not Found")))
+            .flatMap(post -> {
+               var updatedPost = post.update(command);
+               return repository.save(updatedPost);
+            });
+    }
+
     public Mono<Boolean> isPrivate(UUID postId) {
         return repository.findById(postId)
             .map(Post::isPrivate);
-    }
-
-    public Mono<Post> update(UUID postId, PostCommand command) {
-        return null;
     }
 }

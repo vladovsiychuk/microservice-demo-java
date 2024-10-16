@@ -33,4 +33,10 @@ public class Post implements Persistable<UUID> {
 
         return new Post(UUID.randomUUID(), command.content(), command.isPrivate(), true);
     }
+
+    public Post update(PostCommand command) {
+        content = command.content();
+        isPrivate = command.isPrivate();
+        return this;
+    }
 }
