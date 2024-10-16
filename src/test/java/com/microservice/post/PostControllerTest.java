@@ -3,6 +3,7 @@ package com.microservice.post;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -25,41 +26,45 @@ class PostControllerTest {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    @Test
-    void shouldCreatePostAndReturnJsonResponse() throws JsonProcessingException {
-        Post post = Post.create(new PostCommand("hello", false));
-        var command = Map.of(
-            "content", "hello"
-        );
+    @Nested
+    class createTests {
 
-        assert post.getId() != null;
-        var expectedBody = Map.of(
-            "id", post.getId().toString(),
-            "content", "hello",
-            "private", false
-        );
+        @Test
+        void shouldCreatePostAndReturnJsonResponse() throws JsonProcessingException {
+            Post post = Post.create(new PostCommand("hello", false));
+            var command = Map.of(
+                "content", "hello"
+            );
 
-        given(this.postService.create(any(PostCommand.class))).willReturn(Mono.just(post));
+            assert post.getId() != null;
+            var expectedBody = Map.of(
+                "id", post.getId().toString(),
+                "content", "hello",
+                "private", false
+            );
 
-        webTestClient.post()
-            .uri("/v1/posts")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(command)
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody().json(mapper.writeValueAsString(expectedBody), true);
-    }
+            given(postService.create(any(PostCommand.class))).willReturn(Mono.just(post));
 
-    @Test
-    void shouldReturnErrorStatusCodeOnCreate() {
-        given(this.postService.create(any(PostCommand.class))).willReturn(Mono.error(new RuntimeException("Error")));
+            webTestClient.post()
+                .uri("/v1/posts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(command)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().json(mapper.writeValueAsString(expectedBody), true);
+        }
 
-        webTestClient.post()
-            .uri("/v1/posts")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(anyPostCommand())
-            .exchange()
-            .expectStatus().is5xxServerError();
+        @Test
+        void shouldReturnErrorStatusCodeOnCreate() {
+            given(postService.create(any(PostCommand.class))).willReturn(Mono.error(new RuntimeException("Error")));
+
+            webTestClient.post()
+                .uri("/v1/posts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(anyPostCommand())
+                .exchange()
+                .expectStatus().is5xxServerError();
+        }
     }
 
     private PostCommand anyPostCommand() {
