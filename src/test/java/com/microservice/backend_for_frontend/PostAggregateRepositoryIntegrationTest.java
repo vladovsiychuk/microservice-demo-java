@@ -39,7 +39,9 @@ class PostAggregateRepositoryIntegrationTest {
         assert savedEntity != null;
 
         PostAggregate modifiedPost = savedEntity.addComment(
-            new CommentCreatedEvent(1L, new CommentDTO(UUID.randomUUID(), "hello"))
+            new CommentCreatedEvent(
+                1L, new CommentDTO(UUID.randomUUID(), UUID.randomUUID() ,"hello")
+            )
         );
 
         repository.save(modifiedPost).subscribe();
