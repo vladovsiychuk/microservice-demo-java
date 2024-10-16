@@ -1,16 +1,23 @@
 package com.microservice.post;
 
+import com.microservice.shared.PostCreatedEvent;
+import java.util.Date;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@SuppressWarnings("unused")
 public class PostService {
 
     @Autowired
     PostRepository repository;
+
+    @Autowired
+    private ApplicationEventPublisher events;
 
     Flux<Post> list() {
         return repository.findAll();
@@ -19,7 +26,10 @@ public class PostService {
     public Mono<Post> create(PostCommand command) {
         var newPost = Post.create(command);
         return repository.save(newPost)
-            .thenReturn(newPost);
+            .map(post -> post)
+            .doOnSuccess(post ->
+                events.publishEvent(new PostCreatedEvent(new Date().toInstant().toEpochMilli(), post.toDto()))
+            );
     }
 
     public Mono<Post> update(UUID postId, PostCommand command) {

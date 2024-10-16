@@ -1,6 +1,7 @@
 package com.microservice.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.microservice.shared.PostDTO;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,5 +39,9 @@ public class Post implements Persistable<UUID> {
         content = command.content();
         isPrivate = command.isPrivate();
         return this;
+    }
+
+    public PostDTO toDto() {
+        return new PostDTO(id, content, isPrivate);
     }
 }
