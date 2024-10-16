@@ -51,7 +51,7 @@ class PostControllerTest {
     }
 
     @Test
-    void shouldReturnErrorStatusCode() {
+    void shouldReturnErrorStatusCodeOnCreate() {
         given(this.postService.create(any(PostCommand.class))).willReturn(Mono.error(new RuntimeException("Error")));
 
         webTestClient.post()

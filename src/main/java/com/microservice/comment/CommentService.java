@@ -17,6 +17,6 @@ public class CommentService {
     public Mono<Comment> create(CommentCommand command) {
         return postService.isPrivate(command.postId())
             .map( postIsPrivate -> Comment.create(command, postIsPrivate))
-            .flatMap(comment -> repository.save(comment));
+            .flatMap(newComment -> repository.save(newComment));
     }
 }
