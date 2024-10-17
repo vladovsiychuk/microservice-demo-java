@@ -8,6 +8,10 @@ spring:
   data:
     mongodb:
       uri: "mongodb://root:example@localhost:27017/test?authSource=admin"
+    redis:
+      connect-timeout: 2000
+      host: 127.0.0.1
+      port: 6379
   liquibase:
     url: "jdbc:postgresql://localhost/postgres"
     user: "root"
