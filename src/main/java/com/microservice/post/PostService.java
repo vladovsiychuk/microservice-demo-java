@@ -1,6 +1,7 @@
 package com.microservice.post;
 
 import com.microservice.shared.PostCreatedEvent;
+import com.microservice.shared.PostUpdatedEvent;
 import java.util.Date;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,10 @@ public class PostService {
         return repository.findById(postId)
             .switchIfEmpty(Mono.error(new RuntimeException("Post Not Found")))
             .map(post -> post.update(command))
-            .flatMap(repository::save);
+            .flatMap(repository::save)
+            .doOnSuccess(post ->
+                publisher.publishEvent(new PostUpdatedEvent(new Date().toInstant().toEpochMilli(), post.toDto()))
+            );
     }
 
     public Mono<Boolean> isPrivate(UUID postId) {
