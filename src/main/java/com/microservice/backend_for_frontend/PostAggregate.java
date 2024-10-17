@@ -43,7 +43,7 @@ public class PostAggregate {
 
     public PostAggregate updateComment(CommentUpdatedEvent event) {
         var commentToUpdate = comments.stream()
-            .filter(comment -> comment.getId() == event.comment().id())
+            .filter(comment -> comment.getId().equals(event.comment().id()))
             .findFirst();
 
         commentToUpdate.ifPresent(commentItem -> commentItem.update(event));
