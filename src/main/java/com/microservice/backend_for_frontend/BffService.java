@@ -4,14 +4,20 @@ import com.microservice.shared.CommentCreatedEvent;
 import com.microservice.shared.CommentUpdatedEvent;
 import com.microservice.shared.PostCreatedEvent;
 import com.microservice.shared.PostUpdatedEvent;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class BffService {
 
     @Autowired
     PostAggregateRepository repository;
+
+    public Mono<PostAggregate> getPostAggregate(UUID postId) {
+        return repository.findById(postId);
+    }
 
     public void createPostAggregate(PostCreatedEvent event) {
         var newPostAggregate = PostAggregate.create(event);
