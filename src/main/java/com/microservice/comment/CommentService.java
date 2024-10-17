@@ -1,6 +1,7 @@
 package com.microservice.comment;
 
 import com.microservice.post.PostService;
+import com.microservice.shared.CommentCreatedEvent;
 import com.microservice.shared.CommentUpdatedEvent;
 import java.util.Date;
 import java.util.UUID;
@@ -24,7 +25,10 @@ public class CommentService {
     public Mono<Comment> create(UUID postId, CommentCommand command) {
         return postService.isPrivate(postId)
             .map( postIsPrivate -> Comment.create(command, postId, postIsPrivate))
-            .flatMap(newComment -> repository.save(newComment));
+            .flatMap(newComment -> repository.save(newComment))
+            .doOnSuccess(comment ->
+                publisher.publishEvent(new CommentCreatedEvent(new Date().toInstant().toEpochMilli(), comment.toDto()))
+            );
     }
 
     public Mono<Comment> update(UUID commentId, CommentCommand command) {

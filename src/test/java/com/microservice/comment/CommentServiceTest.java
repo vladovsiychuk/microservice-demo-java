@@ -1,6 +1,7 @@
 package com.microservice.comment;
 
 import com.microservice.post.PostService;
+import com.microservice.shared.CommentCreatedEvent;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.ApplicationEventPublisher;
 import reactor.core.publisher.Mono;
 
 class CommentServiceTest {
@@ -29,6 +31,9 @@ class CommentServiceTest {
 
     @Mock
     private PostService postService;
+
+    @Mock
+    private ApplicationEventPublisher publisher;
 
     private MockedStatic<Comment> commentMockedStatic;
 
@@ -66,6 +71,7 @@ class CommentServiceTest {
 
             verify(postService, times(1)).isPrivate(any());
             verify(commentRepository, times(1)).save(any(Comment.class));
+            verify(publisher, times(1)).publishEvent(any(CommentCreatedEvent.class));
         }
     }
 
