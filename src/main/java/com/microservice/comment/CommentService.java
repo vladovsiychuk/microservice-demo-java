@@ -21,8 +21,8 @@ public class CommentService {
     @Autowired
     PostService postService;
 
-    public Mono<Comment> create(CommentCommand command) {
-        return postService.isPrivate(command.postId())
+    public Mono<Comment> create(UUID postId, CommentCommand command) {
+        return postService.isPrivate(postId)
             .map( postIsPrivate -> Comment.create(command, postIsPrivate))
             .flatMap(newComment -> repository.save(newComment));
     }
