@@ -20,7 +20,9 @@ public class BffService {
     ReactiveRedisOperations<String, PostAggregate> postOps;
 
     public Mono<PostAggregate> getPostAggregate(UUID postId) {
-        return repository.findById(postId);
+        return getFromRedisCache(postId)
+            .switchIfEmpty(repository.findById(postId));
+
     }
 
     public void createPostAggregate(PostCreatedEvent event) {
@@ -57,5 +59,12 @@ public class BffService {
         postOps.opsForValue()
             .set(post.getId().toString(), post)
             .subscribe();
+    }
+
+    private Mono<PostAggregate> getFromRedisCache(UUID postId) {
+        return postOps.opsForValue()
+            .get(postId.toString())
+            .doOnSuccess(System.out::println);
+
     }
 }
