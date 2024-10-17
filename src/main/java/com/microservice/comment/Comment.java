@@ -1,6 +1,7 @@
 package com.microservice.comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.microservice.shared.CommentDTO;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,5 +34,14 @@ public class Comment implements Persistable<UUID> {
             throw new RuntimeException("Comments cannot be added to private posts.");
 
         return new Comment(UUID.randomUUID(), command.postId(), command.content(), true);
+    }
+
+    public Comment update(CommentCommand command) {
+        content = command.content();
+        return this;
+    }
+
+    public CommentDTO toDto() {
+        return new CommentDTO(id, postId, content);
     }
 }
