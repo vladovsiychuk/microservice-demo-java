@@ -5,18 +5,19 @@ import com.microservice.shared.CommentUpdatedEvent;
 import com.microservice.shared.PostCreatedEvent;
 import com.microservice.shared.PostUpdatedEvent;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
-@AllArgsConstructor
 public class BffService {
 
-    private final PostAggregateRepository repository;
+    @Autowired
+    PostAggregateRepository repository;
 
-    private final ReactiveRedisOperations<String, PostAggregate> postOps;
+    @Autowired
+    ReactiveRedisOperations<String, PostAggregate> postOps;
 
     public Mono<PostAggregate> getPostAggregate(UUID postId) {
         return repository.findById(postId);
