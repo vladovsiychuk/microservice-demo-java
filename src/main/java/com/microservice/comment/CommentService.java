@@ -23,7 +23,7 @@ public class CommentService {
 
     public Mono<Comment> create(UUID postId, CommentCommand command) {
         return postService.isPrivate(postId)
-            .map( postIsPrivate -> Comment.create(command, postIsPrivate))
+            .map( postIsPrivate -> Comment.create(command, postId, postIsPrivate))
             .flatMap(newComment -> repository.save(newComment));
     }
 

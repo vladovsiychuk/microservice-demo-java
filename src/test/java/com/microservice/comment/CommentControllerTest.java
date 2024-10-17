@@ -28,7 +28,7 @@ class CommentControllerTest {
 
     @Test
     void shouldCreateCommentAndReturnJsonResponse() throws JsonProcessingException {
-        Comment comment = Comment.create(new CommentCommand("hello", UUID.randomUUID()), false);
+        Comment comment = Comment.create(new CommentCommand("hello"), UUID.randomUUID(),false);
         var command = Map.of(
             "content", "hello",
             "postId", comment.getPostId()
@@ -41,7 +41,7 @@ class CommentControllerTest {
             "postId", comment.getPostId()
         );
 
-        given(this.commentService.create(any())).willReturn(Mono.just(comment));
+        given(this.commentService.create(any(), any())).willReturn(Mono.just(comment));
 
         webTestClient.post()
             .uri("/v1/posts/{postId}/comment", comment.getPostId())

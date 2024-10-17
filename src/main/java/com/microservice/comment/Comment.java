@@ -29,11 +29,11 @@ public class Comment implements Persistable<UUID> {
         return isNew;
     }
 
-    public static Comment create(CommentCommand command, boolean postIsPrivate) {
+    public static Comment create(CommentCommand command, UUID postId, boolean postIsPrivate) {
         if (postIsPrivate)
             throw new RuntimeException("Comments cannot be added to private posts.");
 
-        return new Comment(UUID.randomUUID(), command.postId(), command.content(), true);
+        return new Comment(UUID.randomUUID(), postId, command.content(), true);
     }
 
     public Comment update(CommentCommand command) {

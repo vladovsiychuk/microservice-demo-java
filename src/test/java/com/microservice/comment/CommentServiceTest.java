@@ -52,12 +52,15 @@ class CommentServiceTest {
         void testCreate_ShouldCallSave() {
             Comment newComment = mock(Comment.class);
             CommentCommand commentCommand = anyCommentCommand();
+            var anyPostId = UUID.randomUUID();
 
-            commentMockedStatic.when(() -> Comment.create(commentCommand, false)).thenReturn(newComment);
+            commentMockedStatic.when(() ->
+                Comment.create(commentCommand, anyPostId, false)
+            ).thenReturn(newComment);
             when(postService.isPrivate(any())).thenReturn(Mono.just(false));
             when(commentRepository.save(any(Comment.class))).thenReturn(Mono.just(newComment));
 
-            Comment result = commentService.create(commentCommand).block();
+            Comment result = commentService.create(anyPostId, commentCommand).block();
 
             assert result != null;
 
@@ -76,17 +79,21 @@ class CommentServiceTest {
             Comment newComment = mock(Comment.class);
             CommentCommand commentCommand = anyCommentCommand();
 
-            commentMockedStatic.when(() -> Comment.create(commentCommand, false)).thenReturn(newComment);
+            commentMockedStatic.when(() ->
+                Comment.create(commentCommand, UUID.randomUUID(),false)
+            ).thenReturn(newComment);
             when(postService.isPrivate(any())).thenReturn(Mono.error(new RuntimeException("Error")));
             when(commentRepository.save(any(Comment.class))).thenReturn(Mono.just(newComment));
 
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> commentService.create(commentCommand).block());
+            RuntimeException exception = assertThrows(
+                RuntimeException.class, () -> commentService.create(UUID.randomUUID(), commentCommand).block()
+            );
 
             assert exception.getMessage().equals("Error");
         }
     }
 
     private static CommentCommand anyCommentCommand() {
-        return new CommentCommand("hello", UUID.randomUUID());
+        return new CommentCommand("hello");
     }
 }

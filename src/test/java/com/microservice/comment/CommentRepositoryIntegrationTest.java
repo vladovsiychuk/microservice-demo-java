@@ -24,7 +24,7 @@ class CommentRepositoryIntegrationTest {
 
     @Test
     void testEntitySaveAndMapping() {
-        var comment = Comment.create(new CommentCommand("test", UUID.randomUUID()), false);
+        var comment = Comment.create(new CommentCommand("test"), UUID.randomUUID(), false);
         assert comment.getId() != null;
 
         repository.save(comment).block();
