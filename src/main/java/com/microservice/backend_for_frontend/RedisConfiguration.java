@@ -1,6 +1,5 @@
 package com.microservice.backend_for_frontend;
 
-import java.util.UUID;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
@@ -13,13 +12,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfiguration {
   @Bean
-  ReactiveRedisOperations<UUID, PostAggregate> redisOperations(ReactiveRedisConnectionFactory factory) {
+  ReactiveRedisOperations<String, PostAggregate> redisOperations(ReactiveRedisConnectionFactory factory) {
     Jackson2JsonRedisSerializer<PostAggregate> serializer = new Jackson2JsonRedisSerializer<>(PostAggregate.class);
 
-    RedisSerializationContext.RedisSerializationContextBuilder<UUID, PostAggregate> builder =
+    RedisSerializationContext.RedisSerializationContextBuilder<String, PostAggregate> builder =
         RedisSerializationContext.newSerializationContext(new StringRedisSerializer());
 
-    RedisSerializationContext<UUID, PostAggregate> context = builder.value(serializer).build();
+    RedisSerializationContext<String, PostAggregate> context = builder.value(serializer).build();
 
     return new ReactiveRedisTemplate<>(factory, context);
   }

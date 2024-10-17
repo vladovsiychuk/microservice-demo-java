@@ -16,7 +16,7 @@ public class BffService {
 
     private final PostAggregateRepository repository;
 
-    private final ReactiveRedisOperations<UUID, PostAggregate> postOps;
+    private final ReactiveRedisOperations<String, PostAggregate> postOps;
 
     public Mono<PostAggregate> getPostAggregate(UUID postId) {
         return repository.findById(postId);
@@ -54,7 +54,7 @@ public class BffService {
 
     private void updateRedisCache(PostAggregate post) {
         postOps.opsForValue()
-            .set(post.getId(), post)
+            .set(post.getId().toString(), post)
             .subscribe();
     }
 }
