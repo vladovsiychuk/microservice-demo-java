@@ -25,7 +25,7 @@ public class CommentService {
     public Mono<Comment> create(UUID postId, CommentCommand command) {
         return postService.isPrivate(postId)
             .map( postIsPrivate -> Comment.create(command, postId, postIsPrivate))
-            .flatMap(newComment -> repository.save(newComment))
+            .flatMap(repository::save)
             .doOnSuccess(comment ->
                 publisher.publishEvent(new CommentCreatedEvent(new Date().toInstant().toEpochMilli(), comment.toDto()))
             );
@@ -34,7 +34,7 @@ public class CommentService {
     public Mono<Comment> update(UUID commentId, CommentCommand command) {
         return repository.findById(commentId)
             .map(comment -> comment.update(command))
-            .flatMap(updatedComment -> repository.save(updatedComment))
+            .flatMap(repository::save)
             .doOnSuccess(comment ->
                 publisher.publishEvent(new CommentUpdatedEvent(new Date().toInstant().toEpochMilli(), comment.toDto()))
             );

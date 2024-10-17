@@ -26,7 +26,6 @@ public class PostService {
     public Mono<Post> create(PostCommand command) {
         var newPost = Post.create(command);
         return repository.save(newPost)
-            .map(post -> post)
             .doOnSuccess(post ->
                 publisher.publishEvent(new PostCreatedEvent(new Date().toInstant().toEpochMilli(), post.toDto()))
             );
@@ -35,10 +34,8 @@ public class PostService {
     public Mono<Post> update(UUID postId, PostCommand command) {
         return repository.findById(postId)
             .switchIfEmpty(Mono.error(new RuntimeException("Post Not Found")))
-            .flatMap(post -> {
-               var updatedPost = post.update(command);
-               return repository.save(updatedPost);
-            });
+            .map(post -> post.update(command))
+            .flatMap(repository::save);
     }
 
     public Mono<Boolean> isPrivate(UUID postId) {

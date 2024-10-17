@@ -33,7 +33,7 @@ public class BffService {
 
         repository.findById(event.post().id())
             .map(post -> post.update(event))
-            .flatMap(updatedPost -> repository.save(updatedPost))
+            .flatMap(repository::save)
             .doOnSuccess(this::updateRedisCache)
             .subscribe();
     }
@@ -41,14 +41,14 @@ public class BffService {
     public void addCommentToPostAggregate(CommentCreatedEvent event) {
         repository.findById(event.comment().postId())
             .map(post -> post.addComment(event))
-            .flatMap(updatedPost -> repository.save(updatedPost))
+            .flatMap(repository::save)
             .subscribe();
     }
 
     public void updateCommentInPostAggregate(CommentUpdatedEvent event) {
         repository.findById(event.comment().postId())
             .map(post -> post.updateComment(event))
-            .flatMap(updatedPost -> repository.save(updatedPost))
+            .flatMap(repository::save)
             .subscribe();
     }
 
