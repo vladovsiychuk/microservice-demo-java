@@ -33,7 +33,6 @@ public class BffService {
     }
 
     public void updatePostAggregate(PostUpdatedEvent event) {
-
         repository.findById(event.post().id())
             .map(post -> post.update(event))
             .flatMap(repository::save)
@@ -63,8 +62,6 @@ public class BffService {
 
     private Mono<PostAggregate> getFromRedisCache(UUID postId) {
         return postOps.opsForValue()
-            .get(postId.toString())
-            .doOnSuccess(System.out::println);
-
+            .get(postId.toString());
     }
 }
