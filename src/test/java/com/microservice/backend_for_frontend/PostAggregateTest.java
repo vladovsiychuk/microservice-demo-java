@@ -12,11 +12,11 @@ public class PostAggregateTest {
 
     @Test
     void updateTest() {
-        var createdPost = PostAggregate.create(
-            new PostCreatedEvent(1L, new PostDTO(UUID.randomUUID(), "hello", false))
-        );
-
+        var postId = UUID.randomUUID();
         var commentId = UUID.randomUUID();
+        var createdPost = PostAggregate.create(
+            new PostCreatedEvent(1L, new PostDTO(postId, "hello", false))
+        );
 
         createdPost.addComment(
             new CommentCreatedEvent(
@@ -29,5 +29,6 @@ public class PostAggregateTest {
         );
 
         assert updatedPost.getComments().getFirst().getContent().equals("hello mod");
+        assert updatedPost.getId().equals(postId);
     }
 }

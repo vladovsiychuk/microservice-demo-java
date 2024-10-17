@@ -22,7 +22,7 @@ public class PostAggregate {
 
     public static PostAggregate create(PostCreatedEvent event) {
         return new PostAggregate(
-            UUID.randomUUID(),
+            event.post().id(),
             event.post().content(),
             event.post().isPrivate(),
             new ArrayList<>()
