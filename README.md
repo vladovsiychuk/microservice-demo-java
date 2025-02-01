@@ -1,4 +1,4 @@
-## Social Media Microservice Demo
+## Social Media API Service Demo
 
 This project demonstrates a microservice architecture for a social media platform using Spring Boot. IIt has two main domains: **Post** and **Comment**, each managed as a separate domain. The project employs a CQRS pattern for efficient data retrieval and updating, with integration of PostgreSQL, MongoDB, and Redis.
 
